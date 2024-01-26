@@ -9,6 +9,8 @@ import(
 	"go.monogdb.org/mongo-driver/mongo"
 )
 
+var foodCollection *mongo.Collection = database.OpenCollection(database.Client, "food")
+
 func main() {
 	port := os.Getenv("PORT")
 	if port == ""{
@@ -23,4 +25,8 @@ func main() {
 	routes.FoodRoutes(router)
 	routes.MenuRoutes(router)
 	routes.TableRoutes(router)
+	routes.OrderRoutes(router)
+	routes.OrderItemRoutes(router)
+
+	router.Run(":"+ port)
 }
