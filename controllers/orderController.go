@@ -20,7 +20,7 @@ func CreateOrder() gin.HandlerFunc {
 	}
 }
 
-func UpdateORder() gin.HandlerFunc {
+func UpdateOrder() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		
 	}
