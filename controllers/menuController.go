@@ -1,10 +1,31 @@
 package controllers
 
-import "github.com/gin-gonic/gin"
+import (
+	"context"
+	"golang-restaurant-management/database"
+	"net/http"
+	"time"
+
+	"github.com/gin-gonic/gin"
+	"go.mongodb.org/mongo-driver/mongo"
+	"gopkg.in/mgo.v2/bson"
+)
+
+var menuCollection *mongo.Collection = database.OpenCollection(database.Client, "menu")
 
 func GetMenus() gin.HandlerFunc {
 	return func(c *gin.Context) {
-
+		ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
+		result, err := menuCollection.Find(context.TODO(), bson.M{})
+		defer cancel()
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "error occured while listing the menu items"})
+		}
+		var allMenus []bson.M
+		if err = result.All(ctx, &allMenus); err != nil {
+			c.JSON(http.StatusNoContent, allMenus)
+		}
+		c.JSON(http.StatusOK, allMenus)
 	}
 }
 
@@ -22,6 +43,6 @@ func CreateMenu() gin.HandlerFunc {
 
 func UpdateMenu() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		
+
 	}
 }
